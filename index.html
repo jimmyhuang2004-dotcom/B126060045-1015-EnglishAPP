@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOEIC 900+ 金色證書聽讀大師</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-display { font-family: 'Poppins', sans-serif; }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        @keyframes pulse-subtle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .animate-pulse-subtle { animation: pulse-subtle 2s infinite ease-in-out; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-emerald-50/30 to-teal-50/50 text-slate-800 h-full flex flex-col min-h-screen">
+
+    <!-- Header Navigation -->
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('dashboard')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/20">
+                    <i class="fa-solid fa-graduation-cap text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-display font-bold text-lg bg-gradient-to-r from-emerald-700 to-teal-600 bg-clip-text text-transparent">TOEIC 900+ 聽讀特訓</h1>
+                    <p class="text-xs text-slate-500 font-medium">金色證書必備 100 核心單字與片語</p>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <nav class="hidden md:flex items-center space-x-1 bg-slate-100 p-1 rounded-xl">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-white text-emerald-700 shadow-sm">
+                    <i class="fa-solid fa-house mr-1.5"></i> 首頁總覽
+                </button>
+                <button onclick="switchTab('vocabList')" id="nav-vocabList" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-600 hover:text-slate-900">
+                    <i class="fa-solid fa-book-open mr-1.5"></i> 100字清單庫
+                </button>
+                <button onclick="switchTab('listeningQuiz')" id="nav-listeningQuiz" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-600 hover:text-slate-900">
+                    <i class="fa-solid fa-headphones mr-1.5"></i> 聽音辨識挑戰
+                </button>
+                <button onclick="switchTab('readingQuiz')" id="nav-readingQuiz" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-600 hover:text-slate-900">
+                    <i class="fa-solid fa-brain mr-1.5"></i> 讀單字判斷
+                </button>
+            </nav>
+
+            <!-- Quick Stats & Mobile Menu Button -->
+            <div class="flex items-center space-x-3">
+                <div class="hidden sm:flex items-center space-x-2 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-full">
+                    <i class="fa-solid fa-fire text-amber-500 animate-bounce"></i>
+                    <span class="text-xs font-bold text-amber-700" id="headerStreak">連擊: 0</span>
+                </div>
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Drawer -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-2">
+            <button onclick="switchTab('dashboard'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700">首頁總覽</button>
+            <button onclick="switchTab('vocabList'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700">100字清單庫</button>
+            <button onclick="switchTab('listeningQuiz'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700">聽音辨識挑戰</button>
+            <button onclick="switchTab('readingQuiz'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700">讀單字判斷</button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- TAB 1: DASHBOARD -->
+        <section id="tab-dashboard" class="space-y-6">
+            <!-- Hero Banner -->
+            <div class="relative overflow-hidden bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 rounded-3xl p-8 text-white shadow-xl">
+                <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-2xl">
+                    <span class="bg-white/20 text-emerald-100 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-4 inline-block">TOEIC 900+ Gold Certificate</span>
+                    <h2 class="font-display text-3xl sm:text-4xl font-extrabold mb-3">征服職場英文，邁向金色證書！</h2>
+                    <p class="text-emerald-100 text-sm sm:text-base mb-6 leading-relaxed">
+                        精選 100 個多益高頻核心單字與商務片語。結合 Web Speech API 語音朗讀與互動測驗，全方位訓練您的聽力辨識與閱讀判斷力！
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="switchTab('listeningQuiz')" class="bg-white text-emerald-700 font-bold px-6 py-3 rounded-xl shadow-lg hover:bg-emerald-50 transition-all flex items-center space-x-2">
+                            <i class="fa-solid fa-headphones"></i>
+                            <span>開始聽音辨識挑戰</span>
+                        </button>
+                        <button onclick="switchTab('vocabList')" class="bg-emerald-800/60 hover:bg-emerald-800/80 text-white font-bold px-6 py-3 rounded-xl border border-emerald-400/30 transition-all flex items-center space-x-2">
+                            <i class="fa-solid fa-book-open"></i>
+                            <span>瀏覽 100 字清單</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">總答題數</p>
+                        <h3 class="text-2xl font-extrabold text-slate-800" id="statTotalAnswered">0</h3>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-teal-100 text-teal-600 rounded-2xl flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">整體正確率</p>
+                        <h3 class="text-2xl font-extrabold text-slate-800" id="statAccuracy">0%</h3>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-fire"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">最高連續答對</p>
+                        <h3 class="text-2xl font-extrabold text-slate-800" id="statMaxStreak">0</h3>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">精通單字數</p>
+                        <h3 class="text-2xl font-extrabold text-slate-800" id="statMastered">0 / 100</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Action Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div onclick="switchTab('listeningQuiz')" class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-emerald-500 text-white rounded-2xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-headphones-simple"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-xl text-slate-800 mb-2">模式一：聽音辨識挑戰</h3>
+                        <p class="text-slate-600 text-sm mb-4">聆聽 Web Speech API 發音，從 4 個中文選項中選出正確字義。訓練您的多益 Part 1 & Part 2 聽力敏感度。</p>
+                    </div>
+                    <div class="flex items-center text-emerald-600 font-semibold text-sm">
+                        <span>立即開始挑戰</span>
+                        <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+
+                <div onclick="switchTab('readingQuiz')" class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-teal-500 text-white rounded-2xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-book-bookmark"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-xl text-slate-800 mb-2">模式二：讀單字判斷挑戰</h3>
+                        <p class="text-slate-600 text-sm mb-4">給定單字與拼寫或釋義，快速判斷是否匹配正確。強化多益 Part 5 & Part 7 閱讀詞彙實力。</p>
+                    </div>
+                    <div class="flex items-center text-teal-600 font-semibold text-sm">
+                        <span>立即開始挑戰</span>
+                        <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: VOCABULARY LIST (100 WORDS) -->
+        <section id="tab-vocabList" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h2 class="font-display font-bold text-2xl text-slate-800">100 字多益金色證書單字庫</h2>
+                        <p class="text-sm text-slate-500">點擊喇叭按鈕即可聆聽標準美式/英式發音</p>
+                    </div>
+                    <div class="flex items-center space-x-3 w-full sm:w-auto">
+                        <div class="relative flex-grow sm:w-64">
+                            <i class="fa-solid fa-search absolute left-3.5 top-3 text-slate-400"></i>
+                            <input type="text" id="vocabSearchInput" oninput="filterVocabList()" placeholder="搜尋單字、中文或詞性..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vocabulary Grid/List Container -->
+            <div id="vocabContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- TAB 3: LISTENING QUIZ -->
+        <section id="tab-listeningQuiz" class="hidden max-w-2xl mx-auto space-y-6">
+            <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-lg relative overflow-hidden">
+                <!-- Quiz Header Progress -->
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">聽音辨識挑戰</span>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm font-semibold text-slate-505" id="listeningProgressText">第 1 / 10 題</span>
+                        <span class="text-sm font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg"><i class="fa-solid fa-fire mr-1"></i><span id="listeningStreakCount">0</span> 連擊</span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-slate-100 h-2 rounded-full mb-8 overflow-hidden">
+                    <div id="listeningProgressBar" class="bg-emerald-500 h-full w-10% transition-all duration-300"></div>
+                </div>
+
+                <!-- Question Audio Trigger Card -->
+                <div class="text-center py-8 px-4 bg-slate-50 rounded-2xl border border-slate-100 mb-8 space-y-4">
+                    <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl mx-auto shadow-inner cursor-pointer hover:scale-105 transition-transform" onclick="playCurrentListeningAudio()">
+                        <i class="fa-solid fa-volume-high animate-pulse"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-bold text-lg text-slate-800">請點擊聆聽發音，並選出正確中文釋義</h3>
+                        <p class="text-xs text-slate-500 mt-1">（也可以點擊上方圖示重複播放）</p>
+                    </div>
+                    <button onclick="playCurrentListeningAudio()" class="inline-flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl text-sm shadow-md transition-all">
+                        <i class="fa-solid fa-play"></i>
+                        <span>播放語音</span>
+                    </button>
+                </div>
+
+                <!-- Options Grid -->
+                <div id="listeningOptionsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                    <!-- Dynamically populated options -->
+                </div>
+
+                <!-- Feedback & Next Button Area -->
+                <div id="listeningFeedbackArea" class="hidden pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <div id="listeningFeedbackText" class="font-semibold text-sm"></div>
+                    <button onclick="nextListeningQuestion()" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-2.5 rounded-xl text-sm shadow transition-all flex items-center space-x-2">
+                        <span>下一題</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: READING QUIZ -->
+        <section id="tab-readingQuiz" class="hidden max-w-2xl mx-auto space-y-6">
+            <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-lg relative overflow-hidden">
+                <!-- Quiz Header Progress -->
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-xs font-bold uppercase tracking-wider text-teal-600 bg-teal-50 px-3 py-1 rounded-full">讀單字判斷挑戰</span>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm font-semibold text-slate-500" id="readingProgressText">第 1 / 10 題</span>
+                        <span class="text-sm font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg"><i class="fa-solid fa-fire mr-1"></i><span id="readingStreakCount">0</span> 連擊</span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-slate-100 h-2 rounded-full mb-8 overflow-hidden">
+                    <div id="readingProgressBar" class="bg-teal-500 h-full w-10% transition-all duration-300"></div>
+                </div>
+
+                <!-- Question Word Card -->
+                <div class="text-center py-6 px-4 bg-slate-50 rounded-2xl border border-slate-100 mb-8 space-y-3">
+                    <div class="flex items-center justify-center space-x-3">
+                        <h2 id="readingWordTitle" class="font-display font-extrabold text-3xl text-slate-800">Acquisition</h2>
+                        <button onclick="speakWord(currentReadingWord.word)" class="w-10 h-10 bg-teal-100 text-teal-700 rounded-full flex items-center justify-center hover:bg-teal-200 transition-colors">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+                    <span id="readingWordPos" class="inline-block bg-teal-100 text-teal-800 text-xs font-semibold px-3 py-1 rounded-full">[ n. ]</span>
+                    <p id="readingWordExample" class="text-sm text-slate-600 italic mt-2">"Example sentence goes here..."</p>
+                </div>
+
+                <!-- True/False Judgment Prompt -->
+                <div class="text-center mb-6">
+                    <p class="text-sm font-medium text-slate-700">請問下方給出的中文釋義是否與上方單字相符？</p>
+                    <div id="readingDefinitionBox" class="mt-3 p-4 bg-teal-50 border border-teal-200 rounded-2xl font-bold text-lg text-teal-900">
+                        <!-- Definition here -->
+                    </div>
+                </div>
+
+                <!-- True / False Buttons -->
+                <div id="readingActionButtons" class="grid grid-cols-2 gap-4">
+                    <button onclick="answerReadingQuiz(true)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-2xl shadow-lg transition-all flex items-center justify-center space-x-2 text-lg">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>正確 (True)</span>
+                    </button>
+                    <button onclick="answerReadingQuiz(false)" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-4 rounded-2xl shadow-lg transition-all flex items-center justify-center space-x-2 text-lg">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                        <span>錯誤 (False)</span>
+                    </button>
+                </div>
+
+                <!-- Feedback & Next Button Area -->
+                <div id="readingFeedbackArea" class="hidden pt-4 border-t border-slate-100 flex items-center justify-between mt-6">
+                    <div id="readingFeedbackText" class="font-semibold text-sm"></div>
+                    <button onclick="nextReadingQuestion()" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-2.5 rounded-xl text-sm shadow transition-all flex items-center space-x-2">
+                        <span>下一題</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Quiz Result Modal / Overlay -->
+    <div id="quizResultModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 text-center shadow-2xl space-y-6 animate-pulse-subtle">
+            <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-4xl mx-auto shadow-inner">
+                <i class="fa-solid fa-award"></i>
+            </div>
+            <div>
+                <h3 class="font-display font-bold text-2xl text-slate-800" id="modalTitle">測驗結算報告</h3>
+                <p class="text-sm text-slate-500 mt-1" id="modalSubtitle">太棒了！您已順利完成本輪特訓。</p>
+            </div>
+            <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                <div>
+                    <p class="text-xs text-slate-500 uppercase">答對題數</p>
+                    <p class="text-2xl font-extrabold text-emerald-600" id="modalScore">8 / 10</p>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-500 uppercase">正確率</p>
+                    <p class="text-2xl font-extrabold text-teal-600" id="modalAccuracy">80%</p>
+                </div>
+            </div>
+            <div class="flex space-x-3">
+                <button onclick="closeQuizModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl transition-all">返回首頁</button>
+                <button onclick="restartCurrentQuiz()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg transition-all">再挑戰一次</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-500">
+        <p>TOEIC 900+ 金色證書聽讀特訓 APP &copy; 2026 | 結合 Web Speech API & Tailwind CSS</p>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // 100 TOEIC Gold Certificate Vocabulary & Phrases List
+        const vocabList = [
+            { id: 1, word: "Acquisition", pos: "n.", meaning: "獲得、收購", example: "The company announced a major acquisition of a local tech startup." },
+            { id: 2, word: "Allocate", pos: "v.", meaning: "分配、分派（預算、資源）", example: "The manager decided to allocate more funds to the marketing department." },
+            { id: 3, word: "Alternative", pos: "n./adj.", meaning: "替代方案、替代的", example: "We need to find an alternative solution before the deadline." },
+            { id: 4, word: "Approve", pos: "v.", meaning: "批准、贊成、核准", example: "The board of directors approved the annual budget yesterday." },
+            { id: 5, word: "Assessment", pos: "n.", meaning: "評估、考核", example: "Employee performance assessments are conducted annually." },
+            { id: 6, word: "Benchmark", pos: "n./v.", meaning: "基準、水準、對照基準", example: "Our customer service sets the benchmark for the entire industry." },
+            { id: 7, word: "Brief", pos: "adj./v./n.", meaning: "簡短的、簡報", example: "The director gave a brief overview of the quarterly results." },
+            { id: 8, word: "Collaborate", pos: "v.", meaning: "合作、協力", example: "Our team collaborated closely with overseas offices on this project." },
+            { id: 9, word: "Compensation", pos: "n.", meaning: "補償金、薪資報酬", example: "The job offer includes a competitive salary and comprehensive compensation package." },
+            { id: 10, word: "Compliance", pos: "n.", meaning: "遵守、依從（法規或規定）", example: "Strict compliance with safety regulations is mandatory for all workers." },
+            { id: 11, word: "Comprehensive", pos: "adj.", meaning: "全面的、綜合的", example: "We provide a comprehensive training program for new recruits." },
+            { id: 12, word: "Concession", pos: "n.", meaning: "讓步、優惠", example: "Both parties had to make concessions during the contract negotiations." },
+            { id: 13, word: "Confidential", pos: "adj.", meaning: "機密的、私密的", example: "Please keep all financial documents strictly confidential." },
+            { id: 14, word: "Consolidate", pos: "v.", meaning: "鞏固、合併", example: "The company plans to consolidate its regional offices into one headquarters." },
+            { id: 15, word: "Contribution", pos: "n.", meaning: "貢獻、捐獻", example: "We appreciate everyone's contribution to the success of this campaign." },
+            { id: 16, word: "Delegate", pos: "v./n.", meaning: "授權、委派、代表", example: "A good supervisor knows how to delegate tasks effectively." },
+            { id: 17, word: "Demographic", pos: "n./adj.", meaning: "人口統計數據、客群群體", example: "Our primary target demographic consists of young professionals." },
+            { id: 18, word: "Discrepancy", pos: "n.", meaning: "不一致、差異、矛盾", example: "The auditor found a discrepancy in the inventory report." },
+            { id: 19, word: "Diverse", pos: "adj.", meaning: "多樣化的、不同的", example: "Our company prides itself on having a diverse workforce." },
+            { id: 20, word: "Efficient", pos: "adj.", meaning: "效率高的、有能力的", example: "New software has made our workflow much more efficient." },
+            { id: 21, word: "Eligible", pos: "adj.", meaning: "有資格的、合格的", example: "Full-time employees are eligible for health insurance benefits." },
+            { id: 22, word: "Encourage", pos: "v.", meaning: "鼓勵、激勵", example: "Management encourages staff members to share innovative ideas." },
+            { id: 23, word: "Establish", pos: "v.", meaning: "建立、創立、確立", example: "The firm was established in London over twenty years ago." },
+            { id: 24, word: "Exceed", pos: "v.", meaning: "超過、勝過", example: "Sales figures for this quarter exceeded all expectations." },
+            { id: 25, word: "Exclusive", pos: "adj.", meaning: "獨家的、排他的、高級的", example: "We hold exclusive rights to distribute this product in Taiwan." },
+            { id: 26, word: "Expand", pos: "v.", meaning: "擴大、擴展", example: "The corporation plans to expand its operations into Asian markets." },
+            { id: 27, word: "Expertise", pos: "n.", meaning: "專門知識、專長", example: "She brings valuable technical expertise to our engineering team." },
+            { id: 28, word: "Facilitate", pos: "v.", meaning: "促進、使便利、協助", example: "The new system is designed to facilitate online transactions." },
+            { id: 29, word: "Fluctuate", pos: "v.", meaning: "波動、起伏不定", example: "Exchange rates tend to fluctuate throughout the trading day." },
+            { id: 30, word: "Guarantee", pos: "v./n.", meaning: "保證、擔保", example: "All our kitchen appliances come with a two-year guarantee." },
+            { id: 31, word: "Implement", pos: "v./n.", meaning: "實施、執行、工具", example: "The new security policy will be implemented starting next Monday." },
+            { id: 32, word: "Incentive", pos: "n.", meaning: "獎勵、誘因、刺激", example: "Sales representatives received financial incentives for meeting their targets." },
+            { id: 33, word: "Incur", pos: "v.", meaning: "招致、蒙受（費用或損失）", example: "Late payments will incur an additional administrative fee." },
+            { id: 34, word: "Inquiry", pos: "n.", meaning: "詢問、查詢、調查", example: "We received numerous customer inquiries regarding the new product launch." },
+            { id: 35, word: "Inspect", pos: "v.", meaning: "檢查、檢視", example: "Quality control inspectors check every item before packaging." },
+            { id: 36, word: "Inventory", pos: "n.", meaning: "庫存、存貨", example: "A complete inventory check is scheduled for this weekend." },
+            { id: 37, word: "Launch", pos: "v./n.", meaning: "發布、推出、啟動", example: "The marketing team is preparing for the official product launch." },
+            { id: 38, word: "Mandatory", pos: "adj.", meaning: "強制性的、法定的", example: "Attendance at the annual safety briefing is mandatory." },
+            { id: 39, word: "Negotiate", pos: "v.", meaning: "談判、協商", example: "Lawyers are currently negotiating the terms of the merger." },
+            { id: 40, word: "Objective", pos: "n./adj.", meaning: "目標、客觀的", example: "Our main objective this quarter is to increase market share." },
+            { id: 41, word: "Obligation", pos: "n.", meaning: "義務、責任", example: "Signing this contract creates a legal obligation to fulfill the order." },
+            { id: 42, word: "Oversight", pos: "n.", meaning: "監督、監察、疏忽", example: "The committee provides oversight for all research grants." },
+            { id: 43, word: "Participate", pos: "v.", meaning: "參與、參加", example: "All employees are invited to participate in the charity event." },
+            { id: 44, word: "Pending", pos: "adj./prep.", meaning: "未決定的、等待中的", example: "The promotion is currently pending approval from the director." },
+            { id: 45, word: "Persuade", pos: "v.", meaning: "說服、勸說", example: "The salesperson managed to persuade the client to upgrade their plan." },
+            { id: 46, word: "Portfolio", pos: "n.", meaning: "作品集、投資組合", example: "An investment portfolio should be diversified to reduce risk." },
+            { id: 47, word: "Precautions", pos: "n.", meaning: "預防措施", example: "Standard safety precautions must be followed in the laboratory." },
+            { id: 48, word: "Precede", pos: "v.", meaning: "在...之前、先於", example: "A brief introduction will precede the keynote speech." },
+            { id: 49, word: "Priority", pos: "n.", meaning: "優先權、首要事項", example: "Customer satisfaction is our top priority." },
+            { id: 50, word: "Procedures", pos: "n.", meaning: "程序、手續、步驟", example: "Please follow standard operating procedures when handling equipment." },
+            { id: 51, word: "Proficient", pos: "adj.", meaning: "熟練的、精通的", example: "Applicants must be proficient in English and Mandarin." },
+            { id: 52, word: "Propose", pos: "v.", meaning: "提議、建議", example: "She proposed a new schedule to complete the project ahead of time." },
+            { id: 53, word: "Prospect", pos: "n.", meaning: "前景、前途、潛在客戶", example: "The economic prospects for next year look promising." },
+            { id: 54, word: "Protocol", pos: "n.", meaning: "禮節、協議、規約", example: "Diplomatic protocol was strictly observed during the summit." },
+            { id: 55, word: "Qualify", pos: "v.", meaning: "取得資格、符合條件", example: "You must complete the advanced course to qualify for the certificate." },
+            { id: 56, word: "Quarterly", pos: "adj./adv.", meaning: "每季的、一季一次地", example: "The board holds quarterly meetings to review financial reports." },
+            { id: 57, word: "Rebate", pos: "n./v.", meaning: "退款、折扣", example: "Customers can claim a mail-in rebate after purchasing the printer." },
+            { id: 58, word: "Recruit", pos: "v./n.", meaning: "招募、招聘、新進人員", example: "Human resources is actively recruiting experienced software engineers." },
+            { id: 59, word: "Reimburse", pos: "v.", meaning: "報銷、償還", example: "The company will reimburse all travel expenses incurred during the trip." },
+            { id: 60, word: "Relocate", pos: "v.", meaning: "搬遷、遷移", example: "The firm decided to relocate its offices to downtown Taipei." },
+            { id: 61, word: "Remuneration", pos: "n.", meaning: "報酬、酬勞、薪資", example: "The position offers generous remuneration and benefits." },
+            { id: 62, word: "Reputation", pos: "n.", meaning: "名譽、聲望", example: "Our company has built a strong reputation for reliability." },
+            { id: 63, word: "Requisition", pos: "n./v.", meaning: "請購單、正式請求", example: "Please submit a material requisition form to the supply department." },
+            { id: 64, word: "Resolve", pos: "v.", meaning: "解決、下定決心", example: "Customer service representatives are trained to resolve complaints quickly." },
+            { id: 65, word: "Retail", pos: "n./adj./v.", meaning: "零售", example: "The brand operates over 50 retail stores across the country." },
+            { id: 66, word: "Revenue", pos: "n.", meaning: "收入、收益", example: "Advertising revenue increased significantly in the third quarter." },
+            { id: 67, word: "Routine", pos: "n./adj.", meaning: "例行公事、日常的", example: "Routine maintenance checks prevent unexpected equipment failures." },
+            { id: 68, word: "Satisfactory", pos: "adj.", meaning: "令人滿意的、符合要求的", example: "The quality of the translation was entirely satisfactory." },
+            { id: 69, word: "Schedule", pos: "n./v.", meaning: "行程表、時間表、預定", example: "The project is currently running ahead of schedule." },
+            { id: 70, word: "Secure", pos: "adj./v.", meaning: "安全的、穩固的、獲得", example: "We managed to secure a major contract with an overseas client." },
+            { id: 71, word: "Segment", pos: "n./v.", meaning: "部分、區段、客群區隔", example: "We are targeting a younger consumer segment with this campaign." },
+            { id: 72, word: "Significant", pos: "adj.", meaning: "顯著的、重要的", example: "There has been a significant improvement in customer retention." },
+            { id: 73, word: "Specification", pos: "n.", meaning: "規格、詳述", example: "The product matches all technical specifications required by the client." },
+            { id: 74, word: "Spokesperson", pos: "n.", meaning: "發言人", example: "A company spokesperson issued a statement regarding the incident." },
+            { id: 75, word: "Strategy", pos: "n.", meaning: "策略、戰略", example: "The executive team outlined a new growth strategy for next year." },
+            { id: 76, word: "Substantial", pos: "adj.", meaning: "大量的、重大的、實質的", example: "The new machine resulted in a substantial saving in energy costs." },
+            { id: 77, word: "Substitute", pos: "n./v.", meaning: "替代品、替代", example: "Butter can be used as a substitute for oil in this recipe." },
+            { id: 78, word: "Supervise", pos: "v.", meaning: "監督、管理、指導", example: "Senior engineers supervise the construction work on site." },
+            { id: 79, word: "Surplus", pos: "n./adj.", meaning: "過剩、盈餘", example: "The government reported a budget surplus for the fiscal year." },
+            { id: 80, word: "Synergy", pos: "n.", meaning: "協同效應、加乘效果", example: "The merger creates great synergy between the two companies." },
+            { id: 81, word: "Tentative", pos: "adj.", meaning: "暫定的、試探性的", example: "We have reached a tentative agreement on the contract terms." },
+            { id: 82, word: "Transaction", pos: "n.", meaning: "交易、業務辦理", example: "Online banking allows secure financial transactions 24 hours a day." },
+            { id: 83, word: "Transit", pos: "n./v.", meaning: "運輸、過境", example: "Goods are currently in transit and should arrive by Friday." },
+            { id: 84, word: "Transparent", pos: "adj.", meaning: "透明的、易懂的", example: "The organization is committed to transparent financial reporting." },
+            { id: 85, word: "Unanimous", pos: "adj.", meaning: "意見一致的、全體一致的", example: "The board reached a unanimous decision to expand overseas." },
+            { id: 86, word: "Undergo", pos: "v.", meaning: "經歷、承受、接受（檢驗或培訓）", example: "All staff members must undergo safety training before operating machinery." },
+            { id: 87, word: "Undertake", pos: "v.", meaning: "承擔、著手做", example: "The agency will undertake a comprehensive market research study." },
+            { id: 88, word: "Unprecedented", pos: "adj.", meaning: "空前絕後的、史無前例的", example: "Demand for the new smartphone reached unprecedented levels." },
+            { id: 89, word: "Vacancy", pos: "n.", meaning: "職缺、空房", example: "We currently have several job vacancies in the sales department." },
+            { id: 90, word: "Validate", pos: "v.", meaning: "驗證、使生效、確認", example: "An independent auditor was hired to validate the financial statements." },
+            { id: 91, word: "Vendor", pos: "n.", meaning: "供應商、攤販", example: "We met with potential software vendors at the technology expo." },
+            { id: 92, word: "Venture", pos: "n./v.", meaning: "企業、合資企業、冒險", example: "The joint venture between the two firms was highly successful." },
+            { id: 93, word: "Verify", pos: "v.", meaning: "核實、查證", example: "Please verify your contact details before submitting the application." },
+            { id: 94, word: "Versatile", pos: "adj.", meaning: "多才多藝的、多用途的", example: "This lightweight laptop is extremely versatile for business travelers." },
+            { id: 95, word: "Viable", pos: "adj.", meaning: "可行的、能生存的", example: "The committee is searching for financially viable alternatives." },
+            { id: 96, word: "Warranty", pos: "n.", meaning: "保固、保證書", example: "The laptop comes with a three-year international warranty." },
+            { id: 97, word: "Withdraw", pos: "v.", meaning: "提款、撤回、退出", example: "You can withdraw cash from any ATM using your debit card." },
+            { id: 98, word: "Workforce", pos: "n.", meaning: "勞動力、全體員工", example: "Our workforce consists of dedicated professionals from diverse backgrounds." },
+            { id: 99, word: "Yield", pos: "v./n.", meaning: "產出、收益、讓步", example: "New farming techniques can significantly increase crop yields." },
+            { id: 100, word: "Zone", pos: "n./v.", meaning: "區域、地帶", example: "Smoking is strictly prohibited in this designated zone." }
+        ];
+
+        // Global App State
+        let userStats = JSON.parse(localStorage.getItem('toeic_user_stats')) || {
+            totalAnswered: 0,
+            correctCount: 0,
+            streak: 0,
+            maxStreak: 0,
+            masteredIds: []
+        };
+
+        let currentListeningQ = null;
+        let listeningQuizCount = 0;
+        let listeningScore = 0;
+        const maxQuizQuestions = 10;
+
+        let currentReadingWord = null;
+        let readingIsCorrectMatch = true;
+        let readingQuizCount = 0;
+        let readingScore = 0;
+
+        // Initialize on Load
+        window.onload = function() {
+            renderVocabList(vocabList);
+            updateDashboardStats();
+        };
+
+        // Tab Navigation Switcher
+        function switchTab(tabId) {
+            const tabs = ['dashboard', 'vocabList', 'listeningQuiz', 'readingQuiz'];
+            tabs.forEach(t => {
+                const el = document.getElementById('tab-' + t);
+                const navBtn = document.getElementById('nav-' + t);
+                if (el) el.classList.add('hidden');
+                if (navBtn) {
+                    navBtn.classList.remove('bg-white', 'text-emerald-700', 'shadow-sm');
+                    navBtn.classList.add('text-slate-600', 'hover:text-slate-900');
+                }
+            });
+
+            const activeEl = document.getElementById('tab-' + tabId);
+            const activeNav = document.getElementById('nav-' + tabId);
+            if (activeEl) activeEl.classList.remove('hidden');
+            if (activeNav) {
+                activeNav.classList.remove('text-slate-600', 'hover:text-slate-900');
+                activeNav.classList.add('bg-white', 'text-emerald-700', 'shadow-sm');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Initialize quizzes if selected
+            if (tabId === 'listeningQuiz') startListeningQuizSession();
+            if (tabId === 'readingQuiz') startReadingQuizSession();
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Web Speech API Pronunciation
+        function speakWord(text) {
+            if (!('speechSynthesis' in window)) {
+                alert('您的瀏覽器不支援語音合成功能 (Web Speech API)');
+                return;
+            }
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9; // Slightly slower for clarity
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Render Vocabulary List
+        function renderVocabList(items) {
+            const container = document.getElementById('vocabContainer');
+            container.innerHTML = '';
+            items.forEach(item => {
+                const isMastered = userStats.masteredIds.includes(item.id);
+                const card = document.createElement('div');
+                card.className = `bg-white p-5 rounded-2xl border ${isMastered ? 'border-emerald-300 bg-emerald-50/20' : 'border-slate-200'} shadow-sm hover:shadow-md transition-all flex flex-col justify-between`;
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <div class="flex items-center space-x-2">
+                                <span class="font-display font-bold text-lg text-slate-800">${item.word}</span>
+                                <span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">${item.pos}</span>
+                            </div>
+                            <button onclick="speakWord('${item.word}')" class="w-9 h-9 bg-slate-100 hover:bg-emerald-100 text-slate-600 hover:text-emerald-700 rounded-full flex items-center justify-center transition-colors">
+                                <i class="fa-solid fa-volume-high"></i>
+                            </button>
+                        </div>
+                        <p class="text-slate-700 font-medium text-sm mb-2">${item.meaning}</p>
+                        <p class="text-xs text-slate-500 italic mb-4">"${item.example}"</p>
+                    </div>
+                    <div class="flex justify-between items-center pt-3 border-t border-slate-100 text-xs text-slate-400">
+                        <span>#${item.id} TOEIC 900+</span>
+                        <span class="${isMastered ? 'text-emerald-600 font-bold' : ''}">
+                            <i class="fa-solid ${isMastered ? 'fa-circle-check text-emerald-500' : 'fa-circle'} mr-1"></i> ${isMastered ? '已精通' : '學習中'}
+                        </span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterVocabList() {
+            const query = document.getElementById('vocabSearchInput').value.toLowerCase();
+            const filtered = vocabList.filter(item => 
+                item.word.toLowerCase().includes(query) || 
+                item.meaning.toLowerCase().includes(query) || 
+                item.pos.toLowerCase().includes(query)
+            );
+            renderVocabList(filtered);
+        }
+
+        // --- MODE 1: LISTENING QUIZ ---
+        function startListeningQuizSession() {
+            listeningQuizCount = 0;
+            listeningScore = 0;
+            nextListeningQuestion();
+        }
+
+        function nextListeningQuestion() {
+            if (listeningQuizCount >= maxQuizQuestions) {
+                showQuizResultModal(listeningScore, maxQuizQuestions, '聽音辨識挑戰結算');
+                return;
+            }
+            listeningQuizCount++;
+            document.getElementById('listeningProgressText').innerText = `第 ${listeningQuizCount} / ${maxQuizQuestions} 題`;
+            document.getElementById('listeningProgressBar').style.width = `${(listeningQuizCount / maxQuizQuestions) * 100}%`;
+            document.getElementById('listeningStreakCount').innerText = userStats.streak;
+            document.getElementById('listeningFeedbackArea').classList.add('hidden');
+
+            // Pick random word
+            const randomIndex = Math.floor(Math.random() * vocabList.length);
+            currentListeningQ = vocabList[randomIndex];
+
+            // Auto play audio
+            speakWord(currentListeningQ.word);
+
+            // Generate 4 options (1 correct, 3 distractors)
+            let options = [currentListeningQ];
+            while (options.length < 4) {
+                const randItem = vocabList[Math.floor(Math.random() * vocabList.length)];
+                if (!options.includes(randItem)) {
+                    options.push(randItem);
+                }
+            }
+            // Shuffle options
+            options.sort(() => Math.random() - 0.5);
+
+            const grid = document.getElementById('listeningOptionsGrid');
+            grid.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'p-4 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 font-semibold text-slate-700 text-left transition-all flex items-center justify-between group';
+                btn.innerHTML = `
+                    <span>${opt.meaning}</span>
+                    <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-emerald-500"></i>
+                `;
+                btn.onclick = () => checkListeningAnswer(opt.id, currentListeningQ.id, btn);
+                grid.appendChild(btn);
+            });
+        }
+
+        function playCurrentListeningAudio() {
+            if (currentListeningQ) speakWord(currentListeningQ.word);
+        }
+
+        function checkListeningAnswer(selectedId, correctId, btnElement) {
+            const buttons = document.getElementById('listeningOptionsGrid').getElementsByTagName('button');
+            for (let b of buttons) {
+                b.disabled = true;
+                if (b.innerText.includes(vocabList.find(v => v.id === correctId).meaning)) {
+                    b.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-800');
+                }
+            }
+
+            const feedbackArea = document.getElementById('listeningFeedbackArea');
+            const feedbackText = document.getElementById('listeningFeedbackText');
+            feedbackArea.classList.remove('hidden');
+
+            userStats.totalAnswered++;
+            if (selectedId === correctId) {
+                listeningScore++;
+                userStats.correctCount++;
+                userStats.streak++;
+                if (userStats.streak > userStats.maxStreak) userStats.maxStreak = userStats.streak;
+                if (!userStats.masteredIds.includes(correctId)) userStats.masteredIds.push(correctId);
+
+                btnElement.classList.add('bg-emerald-500', 'text-white', 'border-emerald-600');
+                feedbackText.innerHTML = `<span class="text-emerald-600 font-bold text-base"><i class="fa-solid fa-circle-check mr-1.5"></i>答對了！太棒了！</span>`;
+            } else {
+                userStats.streak = 0;
+                btnElement.classList.add('bg-rose-100', 'text-rose-800', 'border-rose-300');
+                feedbackText.innerHTML = `<span class="text-rose-600 font-bold text-base"><i class="fa-solid fa-circle-xmark mr-1.5"></i>答錯囉！正確答案是：${currentListeningQ.word} (${currentListeningQ.meaning})</span>`;
+            }
+
+            saveUserStats();
+            updateDashboardStats();
+            document.getElementById('listeningStreakCount').innerText = userStats.streak;
+        }
+
+        // --- MODE 2: READING QUIZ ---
+        function startReadingQuizSession() {
+            readingQuizCount = 0;
+            readingScore = 0;
+            nextReadingQuestion();
+        }
+
+        function nextReadingQuestion() {
+            if (readingQuizCount >= maxQuizQuestions) {
+                showQuizResultModal(readingScore, maxQuizQuestions, '讀單字判斷挑戰結算');
+                return;
+            }
+            readingQuizCount++;
+            document.getElementById('readingProgressText').innerText = `第 ${readingQuizCount} / ${maxQuizQuestions} 題`;
+            document.getElementById('readingProgressBar').style.width = `${(readingQuizCount / maxQuizQuestions) * 100}%`;
+            document.getElementById('readingStreakCount').innerText = userStats.streak;
+            document.getElementById('readingFeedbackArea').classList.add('hidden');
+            document.getElementById('readingActionButtons').classList.remove('hidden');
+
+            // Pick random word
+            const randIndex = Math.floor(Math.random() * vocabList.length);
+            currentReadingWord = vocabList[randIndex];
+
+            // 50% chance true match, 50% chance false match
+            readingIsCorrectMatch = Math.random() < 0.5;
+            let displayMeaning = currentReadingWord.meaning;
+            if (!readingIsCorrectMatch) {
+                // Pick a wrong meaning
+                const wrongItem = vocabList[Math.floor(Math.random() * vocabList.length)];
+                displayMeaning = wrongItem.meaning;
+            }
+
+            document.getElementById('readingWordTitle').innerText = currentReadingWord.word;
+            document.getElementById('readingWordPos').innerText = `[ ${currentReadingWord.pos} ]`;
+            document.getElementById('readingWordExample').innerText = `"${currentReadingWord.example}"`;
+            document.getElementById('readingDefinitionBox').innerText = displayMeaning;
+        }
+
+        function answerReadingQuiz(userSaysTrue) {
+            document.getElementById('readingActionButtons').classList.add('hidden');
+            const feedbackArea = document.getElementById('readingFeedbackArea');
+            const feedbackText = document.getElementById('readingFeedbackText');
+            feedbackArea.classList.remove('hidden');
+
+            const isCorrect = (userSaysTrue === readingIsCorrectMatch);
+            userStats.totalAnswered++;
+
+            if (isCorrect) {
+                readingScore++;
+                userStats.correctCount++;
+                userStats.streak++;
+                if (userStats.streak > userStats.maxStreak) userStats.maxStreak = userStats.streak;
+                if (!userStats.masteredIds.includes(currentReadingWord.id)) userStats.masteredIds.push(currentReadingWord.id);
+
+                feedbackText.innerHTML = `<span class="text-emerald-600 font-bold text-base"><i class="fa-solid fa-circle-check mr-1.5"></i>判斷正確！連擊中！</span>`;
+            } else {
+                userStats.streak = 0;
+                feedbackText.innerHTML = `<span class="text-rose-600 font-bold text-base"><i class="fa-solid fa-circle-xmark mr-1.5"></i>判斷錯誤！正確答案是：${readingIsCorrectMatch ? '正確匹配' : '不匹配'}</span>`;
+            }
+
+            saveUserStats();
+            updateDashboardStats();
+            document.getElementById('readingStreakCount').innerText = userStats.streak;
+        }
+
+        // --- DASHBOARD & MODAL STATS ---
+        function updateDashboardStats() {
+            document.getElementById('statTotalAnswered').innerText = userStats.totalAnswered;
+            const accuracy = userStats.totalAnswered > 0 ? Math.round((userStats.correctCount / userStats.totalAnswered) * 100) : 0;
+            document.getElementById('statAccuracy').innerText = accuracy + '%';
+            document.getElementById('statMaxStreak').innerText = userStats.maxStreak;
+            document.getElementById('statMastered').innerText = `${userStats.masteredIds.length} / 100`;
+            document.getElementById('headerStreak').innerText = `連擊: ${userStats.streak}`;
+        }
+
+        function saveUserStats() {
+            localStorage.setItem('toeic_user_stats', JSON.stringify(userStats));
+        }
+
+        function showQuizResultModal(score, total, title) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalScore').innerText = `${score} / ${total}`;
+            const acc = Math.round((score / total) * 100);
+            document.getElementById('modalAccuracy').innerText = acc + '%';
+            document.getElementById('quizResultModal').classList.remove('hidden');
+        }
+
+        function closeQuizModal() {
+            document.getElementById('quizResultModal').classList.add('hidden');
+            switchTab('dashboard');
+        }
+
+        function restartCurrentQuiz() {
+            document.getElementById('quizResultModal').classList.add('hidden');
+            const activeTab = document.querySelector('section:not(.hidden)').id;
+            if (activeTab === 'tab-listeningQuiz') startListeningQuizSession();
+            else if (activeTab === 'tab-readingQuiz') startReadingQuizSession();
+            else switchTab('dashboard');
+        }
+    </script>
+</body>
+</html>
